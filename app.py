@@ -1,25 +1,34 @@
 from flask import Flask, render_template,flash
 from jinja2 import Template
 from flask import redirect,url_for,request
-from models import User
+#from models import User
 from werkzeug.security import generate_password_hash, check_password_hash 
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, logout_user, current_user, UserMixin
 from os import path
 from flask_sqlalchemy import SQLAlchemy 
 from flask_login import LoginManager
 
-db=SQLAlchemy()
 
 
 app=Flask(__name__)
 app.secret_key = 'ragasiyam'
 app.config["SQLALCHEMY_DATABASE_URI"]= "sqlite:///database.sqlite"
-db.init_app(app)
+db=SQLAlchemy(app)
+#db.init_app(app)
 
-@app.route('/', methods=['GET','POST'])
-@login_required
-def home():
-    return render_template("home.html",user = current_user)
+class User(db.Model,UserMixin):
+    user_id = db.Column(db.Integer, primary_key=True, nullable=False)
+    email = db.Column(db.String, nullable=False)
+    first_name = db.Column(db.String(150))
+    password = db.Column(db.String(150), nullable=False)
+
+    # Override get_id method to return the user_id as a string
+    def get_id(self):   
+        return str(self.user_id)
+
+
+
+#from models import User
 
 @app.route('/login',methods=['GET','POST'])
 def login():
@@ -33,14 +42,22 @@ def login():
             #in this case we need to check if the hash value of the typed in password is equal to the hash value of that respective user id in database
             if check_password_hash(user.password, password):#this function will return 1 when the hash values are equal
                 flash('Logged in Successfully!', category='Success')
-                login_user(user, remember=remember) #this remember attribute will remember that the user is logged in until they clear the browsing history or logout manually or refreshes the server
-                return redirect(url_for('home'))
+                if remember:
+                    login_user(user, remember=remember) #this remember attribute will remember that the user is logged in until they clear the browsing history or logout manually or refreshes the server
+                    return redirect(url_for('home'))
+                else:
+                    return redirect(url_for('home'))
             else:
                 flash('Incorrect password, try again', category='error')
         else:
             flash('email does not exist!', category='error')
 
     return render_template("login.html",user = current_user)
+
+@app.route('/', methods=['GET','POST'])
+@login_required
+def home():
+    return render_template("home.html",user = current_user)
 
 @app.route('/signup', methods=['GET','POST'])
 def signup():
@@ -70,7 +87,7 @@ def signup():
                 db.session.commit()
                 flash('Account created!', category='Success')
                 login_user(new_user, remember=True)
-                return redirect(url_for('home'))
+                return redirect(url_for('home'))        
 
     
     return render_template('signup.html', user = current_user)
