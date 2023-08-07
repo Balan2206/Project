@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <a href="/adminadd">
+    category add page
+  </a>
+  |
+  <a href="/admindelete">
+    category dete page
+  </a>
+
+    <div class="container mt-3">
+        <h2>List of all Categories</h2> 
+        <table class="table1 table-bordered">
+          <h3>Category list</h3>
+          <thead>
+            <tr>
+                <th>|Category_id|</th>
+                <th>Type|</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for one in all_c %}
+            <tr>
+              <td>{{one['category_id']}}</td>
+              <td>{{one['type']}} </td>
+            </tr>
+            {% endfor%}
+          </tbody>
+        </table>
+          <table class="table2 table-bordered">
+            <h3>Product list</h3>
+            <thead>
+              <tr>
+                <th>|Product_name|</th>
+                <th>Price|</th>
+                <th>Quantity|</th>
+                <th>Unit|</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for two in all_p %}
+              <tr>
+              <td>{{two['product_name']}} </td>
+              <td>{{two['price']}} </td>
+              <td>{{two['quantity']}} </td>
+              <td>{{two['unit']}} </td>
+              </tr>
+                {% endfor%}
+            </tbody>
+          </table>
+    </div>
+      
+</body>
+</html>

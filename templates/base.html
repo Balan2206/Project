@@ -22,9 +22,14 @@
           <li class="new-item">
               <a class="nav-link" href="/">Home</a>
           </li>
-          <li class="'new-item">
+          <li class="new-item">
             <a class="nav-link" href="/logout">Logout</a>
         </li>
+        <li class="new-item">
+            <a class="nav-link" href="/cart">Cart</a>
+        </li>
+        {% block categorylist%}
+        {%endblock%}
         {% else %}
           <li class="'new-item">
               <a class="nav-link" href="/userlogin" alt="login">Login</a>
@@ -42,8 +47,18 @@
         {%if messages %}
           {% for category,message in messages %}
             {% if category == 'error' %}
+            <div class="toast show">
+              <div class="toast-header">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+              </div>
+              <div class="toast-body">
+                <p>{{message}} </p>
+              </div>
+            </div>
+          </div>
             <!--this is for displaying error message box-->
-              <div class="alert alert-danger alert-dismissable fade show" role="alert"> 
+             <!-- <div class="alert alert-danger alert-dismissable fade show" role="alert"> 
                 {{message}} 
                 <button 
                 type="button" 
@@ -52,19 +67,29 @@
               >
                 <span area-hidden="true">&times;</span>
               </button>
-              </div>
+              </div> -->
             {% else %}
             <!--this is for displaying a success message box-->
-              <div class="alert alert-success alert-dismissable fade show" role="alert"> 
+            <div class="toast show">
+              <div class="toast-header">
+                <strong class="me-auto">Success</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+              </div>
+              <div class="toast-body">
+                <p>{{message}} </p>
+              </div>
+            </div>
+          </div>
+            <!--  <div class="alert alert-success alert-dismissable fade show" role="alert"> 
                 {{message}} 
                 <button 
                 type="button" 
                 class="close" 
                 data-dismiss="alert"
               >
-                <span area-hidden="true">&times;</span> <!--this is for the 'x' button to close the message box-->
+                <span area-hidden="true">&times;</span> 
               </button>
-              </div>
+              </div> -->
             {% endif %}
           {% endfor %}
         {% endif %}

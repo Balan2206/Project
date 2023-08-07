@@ -28,8 +28,8 @@ class User(db.Model,UserMixin):
 
 class Cart(db.Model,UserMixin):
     cart_id=db.Column(db.Integer, primary_key=True)
-    product_name=db.Column(db.String)   
-    product_quantity=db.Column(db.String)
+    product_name=db.Column(db.String, db.ForeignKey("product.product_name"))   
+    category_id=db.Column(db.Integer, db.ForeignKey("categories.category_id"))
 
     # Override get_id method to return the cart_id as a string for the expected id value
     def get_id(self):   
@@ -57,6 +57,7 @@ class Categories(db.Model,UserMixin):
 
 class Product(db.Model,UserMixin):
     product_id=db.Column(db.Integer, primary_key=True)
+    product_name=db.Column(db.String,nullable=False)
     price=db.Column(db.Integer, nullable=False)
     quantity=db.Column(db.Integer,nullable=False)
     unit=db.Column(db.String,nullable=False)
@@ -82,7 +83,7 @@ def adminlogin():
         if admin:
             if admin.password == password:
                 flash('Logged in successfully as admin!', category='Success')
-                login_user(admin)
+                login_user(admin,remember=False)
                 return redirect('/admin')
             else:
                 flash('incorrect password! try again', category='error')
@@ -126,15 +127,101 @@ def userlogin():
 
     return render_template("userlogin.html",user = current_user)
 
-@app.route('/admin', methods=['POST','GET'])
+@app.route('/admin',methods=['POST','GET'])
 @login_required
-def admin():
-    return render_template("adminhome.html", user=current_user)
+def adminselect():
+    if request.method=='POST':
+        x=request.form.get('select')
+        if x=='add':
+            return redirect('/adminadd')
+        elif x=='delete':
+            return redirect('/admindelete')
+        else:
+            flash('Enter a valid command (either add or delete)')
+    return render_template('adminselect.html',user=current_user)
+
+@app.route('/adminadd', methods=['POST','GET'])
+@login_required
+def addcategory():
+    if request.method=='POST':
+        category=request.form.get('category')
+        product=request.form.get('product')
+        price=request.form.get('price')
+        quantity=request.form.get('quantity')
+        unit=request.form.get('unit')
+
+
+        c = Categories(
+            type = category
+            )
+        
+        p = Product( 
+            product_name = product,
+            price = price,
+            quantity = quantity,
+            unit = unit
+
+            )
+
+        db.session.add(c)
+        db.session.add(p)
+        db.session.commit()
+
+    else:
+        flash('Enter the names before clicking add!')
+    return render_template('adminadd.html',user=current_user)
+
+@app.route('/admindelete', methods=['POST','GET'])
+@login_required
+def deletecategory():
+    if request.method=='POST':
+        category_id=request.form.get('category_id')
+        product=request.form.get('product')
+
+
+        c = Categories.query.get(category_id)
+        p = Product.query.filter_by(product_name=product).first()
+
+        db.session.delete(c)
+        db.session.delete(p)
+        db.session.commit()
+        flash('Category and Product deleted successfully!', category='Success')
+    else:
+        flash('Enter the names before clicking delete!', category='error')
+    return render_template('admindelete.html',user=current_user)
+
+@app.route('/categories')
+@login_required
+def categories():
+    all_c=Categories.query.all()
+    all_p=Product.query.all()
+    return render_template("categories.html",all_c=all_c,all_p=all_p)
 
 @app.route('/', methods=['GET','POST'])
 @login_required
 def home():
-    return render_template("home.html",user = current_user)
+    selected_category = None
+
+    if request.method=='POST':
+        selected_category_id = request.form.get('category_id')
+        selected_product = request.form.get('product_name')
+        selected_category = Categories.query.get(selected_category_id)
+
+        #adding the product to cart
+        if selected_category:
+            #new_cart_category = Categories.query.get(selected_category_id)
+            #new_cart_product = Product.query.get(selected_product)
+            new_cart_entry = Cart(product_name=selected_product,category_id=selected_category_id)
+            db.session.add(new_cart_entry)
+            db.session.commit()
+            flash('Product successfully added to the cart!', category='Success')
+        else:
+            flash('no product was selected!')
+    all_c=Categories.query.all()
+    all_p=Product.query.all()
+    all_data=zip(all_c,all_p)
+    return render_template("home.html", all_data=all_data, user = current_user, selected_category=selected_category)
+
 
 @app.route('/signup', methods=['GET','POST'])
 def signup():
@@ -168,6 +255,13 @@ def signup():
 
     
     return render_template('signup.html', user = current_user)
+
+@app.route('/cart', methods=['POST','GET'])
+@login_required
+def cart():
+    all_cr=Cart.query.all()
+    return render_template("cart.html",all_cr=all_cr)
+
 
 @app.route('/logout', methods=['GET','POST'])
 @login_required

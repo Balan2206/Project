@@ -1,0 +1,61 @@
+{%extends "base.html"%}
+{%block title%}Home{%endblock%}
+
+{%block categorylist%}
+<li class="'new-item">
+    <a class="nav-link" href="/categories">Categories</a>
+</li>
+{%endblock%}
+
+{%block content%}
+<div class="container-fluid p-3 bg-dark text-white text-center">
+    <h2>Grocery Store</h2>
+    <p>Cruise through the products which amuses before you choose<p>
+</div>
+<div class="container mt-5">
+        <form method="POST">
+            <h1 align="center">Edit categories</h1> 
+            <br>
+            <h2>Delete categories</h2>
+            <div class="form-group">
+                <label for="category">Category_id</label>
+                <input 
+                    type="integer" 
+                    class="form-control" 
+                    id="category_id" 
+                    name="category_id" 
+                    placeholder="Enter category name"
+                />
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="product">Product name</label>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="product" 
+                    name="product" 
+                    placeholder="Enter product name"
+                />
+            </div>
+            <br>
+            <h2 align="center"><button type="submit" class="btn btn-primary">Delete</button></h2>
+        </form>
+</div>
+            
+
+
+
+ <!--
+    <div class="d-grid gap-2">
+        <a href="/addcategory">
+        <button type="button" class="btn btn-primary btn-block">Full-Width Button</button>
+        </a>
+        <a href="/deletecategory">
+        <button type="button" class="btn btn-primary btn-block">Full-Width Button</button>
+        </a>
+      </div>
+    </div>
+-->
+
+{%endblock%}

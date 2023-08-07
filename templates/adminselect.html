@@ -1,0 +1,17 @@
+{%extends 'base.html'%}
+{%block title%}select what to do {%endblock%}
+
+{%block content%}
+<form method="POST">
+<div class="form-group">
+    <label for="email">Enter what you want to do</label>
+    <input 
+        type="text" 
+        class="form-control" 
+        id="select" 
+        name="select" 
+        placeholder="Enter wither add or delete"
+    />
+</div>
+</form>
+{%endblock%}
