@@ -8,27 +8,36 @@
   <title>{%block title%}Base{%endblock%}</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <div class="container-fluid">
-            <ul class="navbar-nav">
-              {% if user.is_authenticated %}
-                <li class="new-item">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="'new-item">
-                  <a class="nav-link" href="/logout">Logout</a>
-              </li>
-              {% else %}
-                <li class="'new-item">
-                    <a class="nav-link" href="/login" alt="login">Login</a>
-                </li>
-                <li class="'new-item">
-                    <a class="nav-link" href="/signup">Sign Up</a>
-                </li>
-              {% endif %}
-            </ul>
-        </div>
-    </nav>
+<div>
+  {%block select%}
+  {%endblock%}
+</div>
+
+{%if template!='selectlogin.html' %}
+<div>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <div class="container-fluid">
+      <ul class="navbar-nav">
+        {% if user.is_authenticated %}
+          <li class="new-item">
+              <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="'new-item">
+            <a class="nav-link" href="/logout">Logout</a>
+        </li>
+        {% else %}
+          <li class="'new-item">
+              <a class="nav-link" href="/userlogin" alt="login">Login</a>
+          </li>
+          <li class="'new-item">
+              <a class="nav-link" href="/signup">Sign Up</a>
+          </li>
+        {% endif %}
+      </ul>
+  </div>
+</nav>
+</div>
+
     {% with messages = get_flashed_messages(with_categories=true) %} <!--this is a predefined function in flask which contains all the messaages that are flashed-->
         {%if messages %}
           {% for category,message in messages %}
@@ -59,7 +68,9 @@
             {% endif %}
           {% endfor %}
         {% endif %}
-        {%endwith%}
+    {%endwith%}
+{%endif%}
+
     <div>
         {%block content%}
         {%endblock%}

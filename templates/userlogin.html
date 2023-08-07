@@ -1,0 +1,66 @@
+{%extends "base.html"%}
+{%block title%}Login{%endblock%}
+
+<!--{%block basic%}
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <div class="container-fluid">
+        <ul class="navbar-nav">
+          {% if user.is_authenticated %}
+            <li class="new-item">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="'new-item">
+              <a class="nav-link" href="/logout">Logout</a>
+          </li>
+          {% else %}
+            <li class="'new-item">
+                <a class="nav-link" href="/login" alt="login">Login</a>
+            </li>
+            <li class="'new-item">
+                <a class="nav-link" href="/signup">Sign Up</a>
+            </li>
+          {% endif %}
+        </ul>
+    </div>
+</nav>
+{%endblock%}
+-->
+
+{%block content%}
+<div class="container">
+<form method="POST">
+    <h1 align="center">Login</h1> 
+    <h3>Enter login credentials</h3>
+    <br>
+    <div class="form-group">
+        <label for="email">Email Address</label>
+        <input 
+            type="email" 
+            class="form-control" 
+            id="email" 
+            name="email" 
+            placeholder="Enter email"
+        />
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+            type="password" 
+            class="form-control" 
+            id="password" 
+            name="password" 
+            placeholder="Enter password"
+        />
+    </div>
+    <div class="form-check mb-3">
+        <label class="form-check-label">
+          <input class="form-check-input" type="checkbox" name="remember" id="remember-checkbox"> Remember me
+        </label>
+    </div>
+    <br>
+    <h2 align="center"><button type="submit" class="btn btn-primary">Login</button></h2>
+</div>
+</form>
+
+{%endblock%}
