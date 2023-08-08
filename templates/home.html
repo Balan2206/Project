@@ -11,6 +11,7 @@
         <form method="POST">
             <div class="form-group">
                 <label for="password2">Enter your product of interest</label>
+                <br>
                 <input 
                     type="text" 
                     class="form-control" 
@@ -18,6 +19,7 @@
                     name="category_id" 
                     placeholder="Enter the id near the product name"
                 />
+                <br>
                 <input 
                     type="text" 
                     class="form-control" 
@@ -25,6 +27,15 @@
                     name="product_name" 
                     placeholder="Enter the product name"
                 />
+                <br>
+                <input 
+                    type="integer" 
+                    class="form-control" 
+                    id="quantity" 
+                    name="quantity" 
+                    placeholder="Enter the quantity of product required"
+                />
+                <br>
             </div>
             <button type="submit" class="btn btn-primary">Add to cart</button>
         </form>

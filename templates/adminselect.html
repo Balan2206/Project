@@ -2,16 +2,21 @@
 {%block title%}select what to do {%endblock%}
 
 {%block content%}
+<div class="container-fluid" align="center">
 <form method="POST">
 <div class="form-group">
-    <label for="email">Enter what you want to do</label>
-    <input 
-        type="text" 
-        class="form-control" 
-        id="select" 
-        name="select" 
-        placeholder="Enter wither add or delete"
-    />
+    <h3>Select what you want to do</h3>
+    <br>
+    <a href="/adminadd" class="btn btn-primary">Add category</a>
+    |
+    <a href="/admindelete" class="btn btn-primary">Delete category</a>
+</div>
 </div>
 </form>
 {%endblock%}
+
+{% block cart%}
+{% endblock %}
+
+{% block home %}
+{% endblock %}

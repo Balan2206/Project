@@ -1,30 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div>
-        <table class="table1 table-striped">
-            <h3>Cart</h3>
-            <thead>
-              <tr>
-                  <th>|Cart_id|</th>
-                  <th>Product_name|</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for three in all_cr %}
-              <tr>
-                <td>{{three['cart_id']}}</td>
-                <td>{{three['product_name']}} </td>
-              </tr>
-              {% endfor%}
-            </tbody>
-          </table>
-    </div>
-</body>
-</html>
+{%extends "base.html" %}
+{%block content%}
+  <h1>Your Cart</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>|Quantity|</th>
+        <!-- Add other columns as needed -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for cart_entry in user_cart_entries %}
+        <tr>
+          <td>{{ cart_entry.product_name }}</td>
+          <td>{{ cart_entry.quantity }} </td>
+          <td>
+            <form method="post" action="/cartdelete">
+              <input type="hidden" name="cart_id" value="{{ cart_entry.cart_id }}">
+              <button type="submit" class="btn btn-primary">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{%endblock%}
+
 

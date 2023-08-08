@@ -13,21 +13,25 @@
   {%endblock%}
 </div>
 
-{%if template!='selectlogin.html' %}
+{%if template != 'selectlogin.html' %}
 <div>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
   <div class="container-fluid">
       <ul class="navbar-nav">
         {% if user.is_authenticated %}
+        {% block home%}
           <li class="new-item">
               <a class="nav-link" href="/">Home</a>
           </li>
+        {% endblock %}
           <li class="new-item">
             <a class="nav-link" href="/logout">Logout</a>
         </li>
+        {% block cart %}
         <li class="new-item">
             <a class="nav-link" href="/cart">Cart</a>
         </li>
+        {% endblock %}
         {% block categorylist%}
         {%endblock%}
         {% else %}
