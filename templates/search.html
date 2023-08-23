@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    {% for c,p in all_data %}
+    
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">{{c.type}} </h4>
+            <p class="card-text">{{c.category_id}}.{{p.product_name}} </p>
+            <form method="post" action="/">
+                <input type="hidden" name="category_id" value="{{ c.category_id }}">
+                <input type="hidden" name="product_name" value="{{ p.product_name }}"> 
+                <button type="submit" class="btn btn-primary">Add to cart</button>
+            </form>
+          </div>
+        </div>
+        <br>
+    
+    {%endfor%}
+</div>
+{% endblock %}

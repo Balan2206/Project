@@ -32,8 +32,25 @@
             <a class="nav-link" href="/cart">Cart</a>
         </li>
         {% endblock %}
-        {% block categorylist%}
-        {%endblock%}
+
+        {% block categoryadd %}
+        <li class="new-item">
+          <a class="nav-link" href="/adminadd">category add page</a>
+        </li>
+        {% endblock %}
+
+        {% block categorydelete %}
+        <li class="new-item">
+          <a class="nav-link" href="/admindelete">category delete page</a>
+        </li>
+        {% endblock %}
+
+        {% block categorylist %}
+        <li class="new-item">
+          <a class="nav-link" href="/categories">Category list</a>
+        </li>
+        {% endblock %}
+
         {% else %}
           <li class="'new-item">
               <a class="nav-link" href="/userlogin" alt="login">Login</a>

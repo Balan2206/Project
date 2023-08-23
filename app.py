@@ -14,6 +14,7 @@ app.config["SQLALCHEMY_DATABASE_URI"]= "sqlite:///database.sqlite"
 db=SQLAlchemy(app)
 #db.init_app(app)
 
+
 #database model
 class User(db.Model,UserMixin):
     user_id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -27,17 +28,24 @@ class User(db.Model,UserMixin):
 
 
 class Cart(db.Model,UserMixin):
-    cart_id=db.Column(db.Integer, primary_key=True)
+    cart_id=db.Column(db.Integer, primary_key=True, nullable=False)
+    quantity=db.Column(db.Integer, nullable=False, default=1)
+    product=db.relationship("Product", backref="cart")
     product_name=db.Column(db.String, db.ForeignKey("product.product_name"))   
     category_id=db.Column(db.Integer, db.ForeignKey("categories.category_id"))
     user_id=db.Column(db.Integer, db.ForeignKey("user.user_id"))
-    quantity=db.Column(db.Integer, nullable=False, default=1)
+
+    '''
+    price=db.Column(db.Integer, db.ForeignKey("product.price"))
+    type=db.Column(db.String, db.ForeignKey("categories.type"))
+    '''
+
     # Override get_id method to return the cart_id as a string for the expected id value
     def get_id(self):   
         return str(self.cart_id)
 
 class Admin(db.Model,UserMixin):
-    admin_id=db.Column(db.Integer, primary_key=True)
+    admin_id=db.Column(db.Integer, primary_key=True, nullable=False)
     email= db.Column(db.String, nullable=False, unique=True)
     first_name=db.Column(db.String)
     password=db.Column(db.String, nullable=False)
@@ -48,8 +56,9 @@ class Admin(db.Model,UserMixin):
 
 
 class Categories(db.Model,UserMixin):
-    category_id=db.Column(db.Integer, primary_key=True)
+    category_id=db.Column(db.Integer, primary_key=True, nullable=False)
     type=db.Column(db.String, nullable=False)
+    #product_id=db.Column(db.Integer, nullable= False)
     #products=db.relationship("Product",backref="categories")
 
     # Override get_id method to return the category_id as a string for the expected id value
@@ -57,12 +66,13 @@ class Categories(db.Model,UserMixin):
         return str(self.category_id)
 
 class Product(db.Model,UserMixin):
-    product_id=db.Column(db.Integer, primary_key=True)
+    product_id=db.Column(db.Integer, primary_key=True, nullable=False)
     product_name=db.Column(db.String,nullable=False)
     price=db.Column(db.Integer, nullable=False)
     quantity=db.Column(db.Integer,nullable=False)
     unit=db.Column(db.String,nullable=False)
     category_id=db.Column(db.Integer, db.ForeignKey("categories.category_id"))
+    
 
     # Override get_id method to return the product_id as a string for the expected id value
     def get_id(self):   
@@ -79,12 +89,17 @@ def adminlogin():
     if request.method=='POST':
         email=request.form.get('email')
         password=request.form.get('password')
+        remember=request.form.get('remember')
 
         admin=Admin.query.filter_by(email=email).first()
         if admin:
             if admin.password == password:
                 flash('Logged in successfully as admin!', category='Success')
-                login_user(admin,remember=False)
+                login_user(admin)
+                if remember:
+                    session['remember_me'] = True
+                else:
+                    session.pop('remember_me', None)
                 return redirect('/admin')
             else:
                 flash('incorrect password! try again', category='error')
@@ -144,6 +159,13 @@ def addcategory():
         quantity=request.form.get('quantity')
         unit=request.form.get('unit')
 
+        # Get the latest category_id from the database
+        latest_category = Categories.query.order_by(Categories.category_id.desc()).first()
+        if latest_category:
+            category_id = latest_category.category_id + 1
+        else:
+            category_id = 1
+
         c = Categories(
             type = category
             )
@@ -153,9 +175,9 @@ def addcategory():
             price = price,
             quantity = quantity,
             unit = unit
-
             )
-
+        
+        p.category_id=category_id
         db.session.add(c)
         db.session.add(p)
         db.session.commit()
@@ -188,43 +210,80 @@ def deletecategory():
 def categories():
     all_c=Categories.query.all()
     all_p=Product.query.all()
-    return render_template("categories.html",all_c=all_c,all_p=all_p)
+    return render_template("categories.html",all_c=all_c,all_p=all_p,user=current_user)
 
 @app.route('/', methods=['GET','POST'])
 @login_required
 def home():
     selected_category = None
+    search_query=request.args.get('search_query')
 
     if request.method=='POST':
         selected_category_id = request.form.get('category_id')
         selected_product = request.form.get('product_name')
         selected_category = Categories.query.get(selected_category_id)
-        selected_quantity=int(request.form.get('quantity'))
+        #selected_quantity=int(request.form.get('quantity'))
         #adding the product to cart
-        if selected_category:
+        selected_product_obj = Product.query.filter_by(product_name=selected_product).first()
+        if selected_product_obj:
+            selected_product_id=selected_product_obj.product_id
             #new_cart_category = Categories.query.get(selected_category_id)
             #new_cart_product = Product.query.get(selected_product)
             new_cart_entry = Cart(
                 product_name=selected_product,
                 category_id=selected_category_id,
                 user_id=current_user.user_id,
-                quantity=selected_quantity)
+                quantity=1)
             db.session.add(new_cart_entry)
             db.session.commit()
             flash('Product successfully added to the cart!', category='Success')
         else:
             flash('no product was selected!')
+
+    if search_query:
+        products=Product.query.filter_by(product_name=search_query).all()
+    else:
+        products= Product.query.all()
+
     all_c=Categories.query.all()
     all_p=Product.query.all()
     all_data=zip(all_c,all_p)
     return render_template("home.html", all_data=all_data, user = current_user, selected_category=selected_category)
 
+@app.route('/search', methods=['POST','GET'])
+def search():
+
+    search_query=request.args.get('search_query')
+
+    #if request.method=='POST':
+
+    if search_query:
+        products=Product.query.filter_by(product_name=search_query).all()
+    else:
+        products= Product.query.all()
+
+    all_p=Product.query.filter_by(product_name=search_query).all()
+    all_c=Categories.query.all()
+    all_data=zip(all_c,all_p)
+    return render_template('search.html', user=current_user, all_data=all_data)
+
 @app.route('/cart', methods=['POST','GET'])
 @login_required
 def cart():
     user_cart_entries=Cart.query.filter_by(user_id=current_user.user_id).all()
+    #product_price=Product.query.filter_by(product_name=user_cart_entries.product_name).first()
+    product_prices = []  # Create an empty list to store product prices
+    for cart_entry in user_cart_entries:
+        product = Product.query.filter_by(product_name=cart_entry.product_name).first()
+        if product:
+            product_prices.append(product.price)
+        else:
+            product_prices.append(None) 
     #all_cr=Cart.query.all()
-    return render_template("cart.html",user_cart_entries=user_cart_entries,user=current_user)
+    total=zip(user_cart_entries,product_prices)
+   
+    
+    return render_template("cart.html",user_cart_entries=user_cart_entries, product_prices=product_prices, total=total, user=current_user)
 
 @app.route('/cartdelete', methods=['POST','GET'])
 @login_required
@@ -240,13 +299,6 @@ def cartdelete():
             flash('Cart entry not found!', category='error')
 
     return redirect('/cart')  # Redirect back to the cart page
-'''
-        c = Cart.query.get(cart_id).all()
-
-        db.session.delete(c)
-        db.session.commit()
-    return redirect('/cart')
-'''
 
 @app.route('/signup', methods=['GET','POST'])
 def signup():
@@ -287,6 +339,11 @@ def logout():
     logout_user()
     return redirect('/select')
     
+@app.route('/buy',methods=['POST','GET'])
+@login_required
+def buy():
+    flash('Order placed successfully!')
+    return redirect('/')
 
 #creating database
 #we will use these two lines for creating database during the development stage
