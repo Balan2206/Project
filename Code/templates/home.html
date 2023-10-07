@@ -1,0 +1,100 @@
+{%extends "base.html"%}
+{%block title%}Home{%endblock%}
+
+{%block content%}
+<div class="container-fluid p-3 bg-dark text-white text-center">
+    <h2>Grocery Store</h2>
+    <p>Cruise through the products which amuses before you choose<p>
+    <form class="d-flex" method="GET" action="{{url_for('search')}}">
+        <input 
+            class="form-control me-2" 
+            type="search" 
+            placeholder="search"
+            aria-label="search"
+            name="search_query">
+            <button class="btn btn-outline-secondary" type="submit">search</button>
+    </form>
+</div>
+<div class="container mt-5">
+    <!-- Display the search query if available -->
+    {% if search_query %}
+        <h3>Search Results for "{{ search_query }}" </h3>
+    {% endif %}
+
+   <!--  <div>
+        <form method="POST">
+            <div class="form-group">
+                <label for="password2">Enter your product of interest</label>
+                <br>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="category_id" 
+                    name="category_id" 
+                    placeholder="Enter the id near the product name"
+                />
+                <br>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="product_name" 
+                    name="product_name" 
+                    placeholder="Enter the product name"
+                />
+                <br>
+                <input 
+                    type="integer" 
+                    class="form-control" 
+                    id="quantity" 
+                    name="quantity" 
+                    placeholder="Enter the quantity of product required"
+                />
+                <br>
+            </div>
+            <button type="submit" class="btn btn-primary">Add to cart</button>
+        </form>
+    </div>
+-->
+<br>
+<br>
+    {% for p in all_p %}
+        {% for c in all_c %}
+        {%if c.category_id==p.category_id%}
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">{{c.type}} </h4>
+            <p class="card-text">{{p.product_name}} </p>
+            <p class="card-text">Price: {{p.price}}  </p> 
+            <p class="card-text">Quantity: {{p.quantity}} {{p.unit}} </p>   
+            <form method="post" action="/">
+                <input type="hidden" name="category_id" value="{{ c.category_id }}">
+                <input type="hidden" name="product_name" value="{{ p.product_name }}">
+                <input type="hidden" name="product_id" value="{{ p.product_id }}">  
+                <input type="hidden" name="quantity" value="{{ p.quantity }}"> 
+                <button type="submit" class="btn btn-primary">Add to cart</button>
+            </form>
+          </div>
+        </div>
+        <br>
+        {%endif%}
+        {%endfor%}
+    {%endfor%}
+      
+ 
+</div>
+{%endblock%}
+
+{% block categoryadd %}
+{% endblock %}
+
+{% block categorydelete %}
+{% endblock %}
+
+{% block categorylist %}
+{% endblock %}
+
+{% block adminselect %}
+{% endblock %}
+
+{% block products %}
+{% endblock %}

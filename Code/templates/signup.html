@@ -1,0 +1,71 @@
+{%extends "base.html"%}
+{%block title%}Sign_Up{%endblock%}
+
+{%block content%}
+
+<div class="container">
+<form method="POST">
+    <h1 align="center">Sign Up</h1> 
+    <br>
+    <h3>Enter the required credentials to create an account</h3>
+    <br>
+    <div class="form-group">
+        <label for="email">Email Address</label>
+        <input 
+            type="email" 
+            class="form-control" 
+            id="email" 
+            name="email" 
+            placeholder="Enter email"
+        />
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="firstname">First Name</label>
+        <input 
+            type="text" 
+            class="form-control" 
+            id="firstname" 
+            name="firstname" 
+            placeholder="Enter firstname"
+        />
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="password1">Password</label>
+        <input 
+            type="password" 
+            class="form-control" 
+            id="password1" 
+            name="password1" 
+            placeholder="Enter password"
+        />
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="password2">Password(confirm)</label>
+        <input 
+            type="password" 
+            class="form-control" 
+            id="password2" 
+            name="password2" 
+            placeholder="confirm password"
+        />
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Sign Up</button>
+</form>
+</div>
+{%endblock%}
+
+{% block categoryadd %}
+{% endblock %}
+
+{% block categorydelete %}
+{% endblock %}
+
+{% block adminselect %}
+{% endblock %}
+
+{% block products %}
+{% endblock %}

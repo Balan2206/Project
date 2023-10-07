@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{%block title%}Products{%endblock%}
+
+{% block content %}
+
+    <body>
+        
+    <div class="container mt-3">
+        <h2>List of all Products</h2> 
+        <hr>
+        <h3>Product list</h3><button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#demo">Edit</button>
+         <table class="table1 table-bordered">
+          <thead>
+            <tr>
+                <th>Product_id</th>
+                <th>Category_id</th>
+                <th>Product name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>units</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for one in all_p %}
+            <tr>
+              <td>{{one['product_id']}} </td>
+              <td>{{one['category_id']}} </td>
+              <td>{{one['product_name']}} 
+                
+                <div id="demo" class="collapse">
+                    <form method="post" action="/productedit">
+                        <input type="hidden" name="product_id" value="{{ one.product_id }}">
+                        <label for="user_input">Type new name:</label>
+                        <input 
+                                type="text" 
+                                id="new_product" 
+                                name="new_product" 
+                                placeholder="new product name"
+                            />
+                        <input type="submit" value="Submit">
+                        <!-- <button type="submit" class="btn btn-primary">Edit</button> -->
+                    </form>
+                </div>
+              </td>
+              <td>{{one['price']}} 
+                
+                <div id="demo" class="collapse">
+                    <form method="post" action="/priceedit">
+                        <input type="hidden" name="product_id" value="{{ one.product_id }}">
+                        <label for="user_input">Type new price:</label>
+                        <input 
+                                type="text" 
+                                id="new_price" 
+                                name="new_price" 
+                                placeholder="new price"
+                            />
+                        <input type="submit" value="Submit">
+                        <!-- <button type="submit" class="btn btn-primary">Edit</button> -->
+                    </form>
+              </td>
+              <td>{{one['quantity']}} 
+                
+                <div id="demo" class="collapse">
+                    <form method="post" action="/quantityedit">
+                        <input type="hidden" name="product_id" value="{{ one.product_id }}">
+                        <label for="user_input">Type new quantity:</label>
+                        <input 
+                                type="text" 
+                                id="new_quantity" 
+                                name="new_quantity" 
+                                placeholder="new quantity"
+                            />
+                        <input type="submit" value="Submit">
+                        <!-- <button type="submit" class="btn btn-primary">Edit</button> -->
+                    </form>
+              </td>
+              <td>{{one['unit']}} 
+                
+                <div id="demo" class="collapse">
+                    <form method="post" action="/unitedit">
+                        <input type="hidden" name="product_id" value="{{ one.product_id }}">
+                        <label for="user_input">Type new unit:</label>
+                        <input 
+                                type="text" 
+                                id="new_unit" 
+                                name="new_unit" 
+                                placeholder="new unit"
+                            />
+                        <input type="submit" value="Submit">
+                        <!-- <button type="submit" class="btn btn-primary">Edit</button> -->
+                    </form>
+              </td>
+              <td>
+                <form method="post" action="/productdelete">
+                    <input type="hidden" name="product_id" value="{{ one.product_id }}">
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </form>
+              </td>
+            </tr>
+            
+            
+            {%endfor%}
+        </table>
+        <hr>
+        <h4>Total price = {{total_price}} </h4>
+    </div>
+    </body>
+
+{% endblock %}
+
+
+
+{% block home %}
+{%endblock%}
+
+{% block cart %}
+{%endblock%}
+
+
+{% block categorydelete %}
+{% endblock %}
+
+{% block products %}
+{% endblock %}
+

@@ -1,0 +1,45 @@
+{%extends 'base.html'%}
+{%block title%}select what to do {%endblock%}
+
+{%block content%}
+<div class="container-fluid" align="center">
+<form method="POST">
+<div class="form-group">
+    <h3>Select what you want to do</h3>
+    <br>
+    <a href="/adminadd" class="btn btn-primary">Add product</a>
+    |
+    <a href="/addcategory" class="btn btn-primary">Add category</a>
+    |
+    <a href="/products" class="btn btn-primary">Products</a>
+   <!-- <a href="/categories" class="btn btn-primary">Categories</a> -->
+   <br>
+   <br>
+    <div class="dropdown">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+          Categories
+        </button>
+        <ul class="dropdown-menu">
+          {% for i in c %}
+          <li><a class="dropdown-item">{{i.type}} </a></li>
+          {% endfor%}
+          <li><a class="dropdown-item" href="/categories">Categories page </a></li>
+        </ul>
+
+    </div>
+    </div>
+</div>
+</form>
+{%endblock%}
+
+{% block cart%}
+{% endblock %}
+
+{% block home %}
+{% endblock %}
+
+{% block categoryadd %}
+{% endblock %}
+
+{% block categorydelete %}
+{% endblock %}

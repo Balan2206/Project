@@ -1,0 +1,52 @@
+{%extends "base.html" %}
+
+{%block content%}
+<div class="container-fluid">
+  <h1>Your Cart</h1>
+  <table class="table1 table-bordered">
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total price</th>
+        <th> </th>
+        <!-- Add other columns as needed -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for cart_entry,product_price in total %}
+        <tr>
+          <td>{{ cart_entry.product_name }}</td>
+          <td>{{ product_price }} </td>
+          <td>{{ cart_entry.quantity }} </td>
+          <td>{{ cart_entry.quantity*product_price}} </td>
+          <td>
+            <form method="post" action="/cartdelete">
+              <input type="hidden" name="cart_id" value="{{ cart_entry.cart_id }}">
+              <button type="submit" class="btn btn-primary">Delete</button>
+            </form>
+          </td> 
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h3>Total price = {{total_price}} </h3>
+  <h2 align="center"><a href="/buy"> <button type="submit" class="btn btn-primary">Place order</button></a></h2>
+  </div>
+{%endblock%}
+
+{% block categoryadd %}
+{% endblock %}
+
+{% block categorydelete %}
+{% endblock %}
+
+{% block categorylist %}
+{% endblock %}
+
+{% block adminselect %}
+{% endblock %}
+
+{% block products %}
+{% endblock %}

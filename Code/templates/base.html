@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <title>{%block title%}Base{%endblock%}</title>
+</head>
+<body>
+<div>
+  {%block select%}
+  {%endblock%}
+</div>
+
+{%if template != 'selectlogin.html' %}
+<div>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <div class="container-fluid">
+      <ul class="navbar-nav">
+        {% if user.is_authenticated %}
+        {% block home%}
+          <li class="new-item">
+              <a class="nav-link" href="/">Home</a>
+          </li>
+        {% endblock %}
+          <li class="new-item">
+            <a class="nav-link" href="/logout">Logout</a>
+        </li>
+        {% block cart %}
+        <li class="new-item">
+            <a class="nav-link" href="/cart">Cart</a>
+        </li>
+        {% endblock %}
+
+        <!-- {% block categoryadd %}
+        <li class="new-item">
+          <a class="nav-link" href="/addcategory">category add page</a>
+        </li>
+        {% endblock %} -->
+
+        {% block categorydelete %}
+        <li class="new-item">
+          <a class="nav-link" href="/admindelete">category delete page</a>
+        </li>
+        {% endblock %}
+
+        {% block categorylist %}
+        <li class="new-item">
+          <a class="nav-link" href="/categories">Category list</a>
+        </li>
+        {% endblock %}
+
+        {% block adminselect %}
+        <li class="new-item">
+          <a class="nav-link" href="/admin">admin home</a>
+        </li>
+        {% endblock %}
+
+        {% block products %}
+        <li class="new-item">
+          <a class="nav-link" href="/products">Product list</a>
+        </li>
+        {% endblock %}
+
+
+        {% else %}
+          <li class="'new-item">
+              <a class="nav-link" href="/userlogin" alt="login">Login</a>
+          </li>
+          <li class="'new-item">
+              <a class="nav-link" href="/signup">Sign Up</a>
+          </li>
+        {% endif %}
+      </ul>
+  </div>
+</nav>
+</div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} <!--this is a predefined function in flask which contains all the messaages that are flashed-->
+        {%if messages %}
+          {% for category,message in messages %}
+            {% if category == 'error' %}
+            <div class="toast show">
+              <div class="toast-header">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+              </div>
+              <div class="toast-body">
+                <p>{{message}} </p>
+              </div>
+            </div>
+          </div>
+            <!--this is for displaying error message box-->
+             <!-- <div class="alert alert-danger alert-dismissable fade show" role="alert"> 
+                {{message}} 
+                <button 
+                type="button" 
+                class="close" 
+                data-dismiss="alert"
+              >
+                <span area-hidden="true">&times;</span>
+              </button>
+              </div> -->
+            {% else %}
+            <!--this is for displaying a success message box-->
+            <div class="toast show">
+              <div class="toast-header">
+                <strong class="me-auto">Success</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+              </div>
+              <div class="toast-body">
+                <p>{{message}} </p>
+              </div>
+            </div>
+          </div>
+            <!--  <div class="alert alert-success alert-dismissable fade show" role="alert"> 
+                {{message}} 
+                <button 
+                type="button" 
+                class="close" 
+                data-dismiss="alert"
+              >
+                <span area-hidden="true">&times;</span> 
+              </button>
+              </div> -->
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+    {%endwith%}
+{%endif%}
+
+    <div>
+        {%block content%}
+        {%endblock%}
+    </div>
+</body>
+</html>
